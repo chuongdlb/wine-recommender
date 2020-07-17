@@ -20,12 +20,16 @@ def preprocess(df, user_pref = 'Both'):
     else: 
         return df.fillna(0)
 
-def recommend_using_cosine_similarity(df, user_wine_features):
-    print(df[['Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic']])
-    df['Similarity'] = cosine_similarity(df[['Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic']], user_wine_features)
+def normalize_vivino_score(df):
     df['VivinoRating'] = df['VivinoRating'] / df['Price']
+    vivino_max = df['VivinoRating'].max()
+    vivino_min = df['VivinoRating'].min()
+    df['VivinoRating'] = (df['VivinoRating'] - vivino_min) / (vivino_max - vivino_min)
+    return df
+
+def recommend_using_cosine_similarity(df, user_wine_features):
+    df['Similarity'] = cosine_similarity(df[['Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic']], user_wine_features)
     df['BlendedScore'] = df['Similarity'] * .5 + df['VivinoRating'] * .5
-    print(df)
     return df.sort_values(by='BlendedScore', ascending=False)
 
 if __name__ == "__main__":
@@ -41,14 +45,22 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print(args)
     user_wine_features = np.array([[args.dry_sweet, args.light_bold, args.soft_acidic, args.smooth_tannic]])
-    print(user_wine_features)
     # read csv file from first argument 
     df = pd.read_csv(args.csvfile)
-    
-    print(df)
+    # pre-process
     p_df = preprocess(df, args.type)
-    print(p_df[['WineName', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic']])
+    # normalize Vivino score
+    p_df = normalize_vivino_score(p_df)
+    # print(p_df[['WineName', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic']])
 
     out_df = recommend_using_cosine_similarity(p_df, user_wine_features)
-    out_df.head()
-    print(out_df[['WineName', 'Type', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic', 'VivinoRating', 'BlendedScore', 'Similarity']].head())
+    print('Similarity weight >= 0.9')
+    print(out_df[out_df['Similarity'] >= 0.9][['WineName', 'Vintage', 'Type', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic', 'VivinoRating', 'BlendedScore', 'Similarity']].head())
+    print('0.8 <= Similarity weight < 0.9')
+    print(out_df.query('Similarity >= 0.8 & Similarity < 0.9')[['WineName', 'Vintage', 'Type', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic', 'VivinoRating', 'BlendedScore', 'Similarity']].head())
+    print('0.75 <= Similarity weight < 0.8')
+    print(out_df.query('Similarity >= 0.75 & Similarity < 0.8')[['WineName', 'Vintage', 'Type', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic', 'VivinoRating', 'BlendedScore', 'Similarity']].head())
+    print('0.5 <= Similarity weight < 0.75')
+    print(out_df.query('Similarity >= 0.5 & Similarity < 0.75')[['WineName', 'Vintage', 'Type', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic', 'VivinoRating', 'BlendedScore', 'Similarity']].head())
+
+
