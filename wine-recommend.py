@@ -51,4 +51,4 @@ if __name__ == "__main__":
 
     out_df = recommend_using_cosine_similarity(p_df, user_wine_features)
     out_df.head()
-    print(out_df[['WineName', 'Type', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic', 'VivinoRating', 'BlendedScore', 'Similarity']])
+    print(out_df[['WineName', 'Type', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic', 'VivinoRating', 'BlendedScore', 'Similarity']].head())
