@@ -2,12 +2,11 @@
 import datetime as dt
 import pandas as pd
 import numpy as np
-from numpy import cumsum, log, polyfit, sqrt, std, subtract
-from numpy.random import randn
+# from numpy.random import randn
 from scipy.spatial.distance import cosine
 from sklearn.metrics.pairwise import cosine_similarity
-import sys
 import argparse
+import sys
 # from pandas_datareader import data, wb
 
 def preprocess(df, user_pref = 'Both'):
