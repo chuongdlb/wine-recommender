@@ -5,12 +5,13 @@ Install:
 pip3 install -r requirements.txt
 ```
 
-Command line example:
+### Command line example:
+Generate fake users:
 ```
-python3 wine-recommend.py wine.csv --type Red --dry-sweet 1.0 --light-bold 2.0 --soft-acidic 3.0 --smooth-tannic 8.0
+python3 gen_user.py
+```
 
+Result will output to results.csv
 ```
-
-```
-python3 wine-recommend.py wine.csv --type Both --dry-sweet 1.0 --light-bold 2.0 --soft-acidic 3.0 --smooth-tannic 1.0
+python3 wine-recommend.py wine.csv user.csv
 ```
