@@ -75,11 +75,6 @@ def compute_recommend_for_user(product_data_frame, user_data_frame):
         for i, r in top_weight_5_75.iterrows():
             df = df.append(r.to_dict(), ignore_index=True)
 
-        # print('0.75 <= Similarity weight < 0.8')
-        # print(out_df.query('Similarity >= 0.75 & Similarity < 0.8')[['WineName', 'Vintage', 'Type', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic', 'VivinoRating', 'BlendedScore', 'Similarity']].head())
-        # print('0.5 <= Similarity weight < 0.75')
-        # print(out_df.query('Similarity >= 0.5 & Similarity < 0.75')[['WineName', 'Vintage', 'Type', 'Dry-Sweet', 'Light-Bold', 'Soft-Acidic', 'Smooth-Tannic', 'VivinoRating', 'BlendedScore', 'Similarity']].head())
-
     return df.round(3)
 
 if __name__ == "__main__":
